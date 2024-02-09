@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://assets-global.website-files.com/635024e3b684816251d42358/63c9768f5722f06b7a14763d_Black%20Crow%20Ai.svg" alt="Black Crow AI Logo" class="logo" style="filter: invert(100%);">
+        <h1>Business Card Generator</h1>
+        <div id="successMessage" class="success-message"></div> <!-- Success message moved here -->
+    </div>
+    <form id="profileForm" action="https://script.google.com/macros/s/AKfycbxIi0FLpvcHexnnXOpbcKfdFddId3XsxmvLKtN5epmf8tW6qHih42x8lIVAO68XY7D7/exec" method="post">
+        <h2>Fill Your Details</h2>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="employeeSince">Employee Since</label>
+            <input type="number" id="employeeSince" name="employeeSince" required>
+        </div>
+        <div class="form-group">
+            <label for="linkedin">LinkedIn Profile URL</label>
+            <input type="url" id="linkedin" name="linkedin">
+        </div>
+        <div class="form-group">
+            <label for="imageUrl">Profile Picture URL</label>
+            <input type="url" id="imageUrl" name="imageUrl">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+<div id="loadingOverlay">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+</div>
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('name').value = urlParams.get('name') || '';
+        document.getElementById('title').value = urlParams.get('title') || '';
+        document.getElementById('email').value = urlParams.get('email') || '';
+        document.getElementById('employeeSince').value = urlParams.get('employeeSince') || '';
+        document.getElementById('linkedin').value = urlParams.get('linkedin') || '';
+        document.getElementById('imageUrl').value = urlParams.get('imageUrl') || '';
+    };
+
+    document.getElementById('profileForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        // Show loading overlay
+        document.getElementById('loadingOverlay').style.display = 'flex';
+
+        // Get form data
+        const formData = new FormData(this);
+
+        // Send form data asynchronously
+        fetch('https://script.google.com/macros/s/AKfycbxIi0FLpvcHexnnXOpbcKfdFddId3XsxmvLKtN5epmf8tW6qHih42x8lIVAO68XY7D7/exec', {
+            method: 'POST',
+            body: JSON.stringify(Object.fromEntries(formData.entries()))
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // Decode the Base64 string to bytes
+                    const byteCharacters = atob(data.pkpassBase64);
+                    const byteArrays = [];
+
+                    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                        const slice = byteCharacters.slice(offset, offset + 512);
+                        const byteNumbers = new Array(slice.length);
+                        for (let i = 0; i < slice.length; i++) {
+                            byteNumbers[i] = slice.charCodeAt(i);
+                        }
+                        const byteArray = new Uint8Array(byteNumbers);
+                        byteArrays.push(byteArray);
+                    }
+
+                    const blob = new Blob(byteArrays, { type: 'application/vnd.apple.pkpass' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'pass.pkpass';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    console.error('Failed to retrieve .pkpass data');
+                }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => {
+                // Hide loading overlay regardless of success or failure
+                document.getElementById('loadingOverlay').style.display = 'none';
+            });
+    });
+</script>
+</body>
+</html>
