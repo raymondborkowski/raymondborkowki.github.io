@@ -1,0 +1,188 @@
+:root {
+    /* Color variables */
+    --background-color: #0D1117; /* Dark background */
+    --text-color: #C9D1D9; /* Light grey text */
+    --input-background-color: #161B22; /* Slightly lighter input background */
+    --input-border-color: #30363D; /* Input border color */
+    --button-color: #22C55E; /* Button color */
+    --button-hover-color: #16A34A; /* Button hover color */
+    --container-padding: 20px; /* Container padding */
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Freight Text Pro Book', 'Times New Roman', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6; /* Improved line height for readability */
+}
+
+.container {
+    max-width: 700px;
+    margin: 50px auto;
+    background: var(--background-color);
+    padding: var(--container-padding);
+    border-radius: 8px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 200px; /* Adjust as needed */
+    height: auto;
+    filter: invert(100%);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label,
+.form-group input {
+    width: 100%; /* Full width by default */
+}
+
+/* Make input fields two columns on desktop */
+@media (min-width: 769px) {
+    .form-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    button[type=submit] {
+        grid-column: span 2; /* Button spans across both columns */
+    }
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: var(--container-padding);
+    }
+
+    .logo img {
+        width: 150px; /* Smaller logo for mobile */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Smaller heading for mobile */
+    }
+
+    h2 {
+        font-size: 1.25rem; /* Smaller subheading for mobile */
+    }
+
+    input[type=text], input[type=email], input[type=number], input[type=url], button[type=submit] {
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+input[type=text], input[type=email], input[type=number], input[type=url] {
+    padding: 12px 20px;
+    background-color: var(--input-background-color);
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-family: inherit;
+}
+
+button[type=submit] {
+    background-color: var(--button-color);
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button[type=submit]:hover {
+    background-color: var(--button-hover-color);
+}
+
+h1, h2 {
+    color: var(--text-color);
+}
+
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+}
+.loading-message {
+    margin-bottom: 20px;
+}
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.success-message {
+    color: white;
+    background-color: green;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    display: none; /* Initially hidden */
+}
